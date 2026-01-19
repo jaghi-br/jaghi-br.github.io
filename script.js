@@ -227,7 +227,7 @@ class PluribusEffect {
 
                 for (let i = 0; i < ringCount; i++) {
                     const ringRadius = pulse.radius - (i * ringSpacing);
-                    if (ringRadius <= 0) continue;
+                    if (ringRadius < 1) continue;
 
                     const ringOpacity = pulse.opacity * (1 - i * 0.3); // anéis internos mais fracos
                     const lineWidth = 1.5 - (i * 0.4);
