@@ -219,7 +219,8 @@ class PluribusEffect {
 
     drawPulseRings() {
         this.pulses.forEach(pulse => {
-            if (pulse.opacity > 0.02) {
+            // Verificar se o raio é positivo e opacidade é visível
+            if (pulse.radius > 0 && pulse.opacity > 0.02) {
                 this.ctx.save();
                 this.ctx.globalAlpha = pulse.opacity * 0.15;
                 this.ctx.strokeStyle = '#ffffff';
