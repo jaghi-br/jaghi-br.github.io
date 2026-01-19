@@ -1,0 +1,105 @@
+/* Reset e base */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --particle-color: rgba(255, 255, 255, 0.6);
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Canvas de partículas */
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Container principal */
+.container {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Logo/Nome da empresa */
+.logo {
+    font-size: clamp(2.5rem, 10vw, 6rem);
+    font-weight: 300;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeIn 2s ease-out forwards;
+    animation-delay: 0.5s;
+    text-shadow:
+        0 0 40px rgba(255, 255, 255, 0.1),
+        0 0 80px rgba(255, 255, 255, 0.05);
+    user-select: none;
+    padding-left: 0.4em;
+    /* Compensa o letter-spacing */
+}
+
+/* Animação de entrada do logo */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+        filter: blur(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+/* Fundo puro - preto total como no Pluribus */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .logo {
+        letter-spacing: 0.25em;
+        padding-left: 0.25em;
+    }
+}
