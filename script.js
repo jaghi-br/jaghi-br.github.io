@@ -18,7 +18,7 @@ class PluribusEffect {
 
         this.time = 0;
         this.lastPulseTime = 0;
-        this.pulseInterval = 1500; // pulsos mais lentos (1.5 segundos)
+        this.pulseInterval = 1000; // pulsos a cada 1 segundo
         this.pulseRadius = 0;
         this.pulses = [];
 
@@ -221,23 +221,39 @@ class PluribusEffect {
         this.pulses.forEach(pulse => {
             // Verificar se o raio é positivo e opacidade é visível
             if (pulse.radius > 0 && pulse.opacity > 0.02) {
-                // Desenhar múltiplos anéis para efeito ripple
-                const ringCount = 3;
-                const ringSpacing = 8; // espaçamento entre anéis
+                // Efeito ripple com múltiplos anéis concêntricos
+                const ringCount = 5;
+                const ringSpacing = 12;
 
                 for (let i = 0; i < ringCount; i++) {
                     const ringRadius = pulse.radius - (i * ringSpacing);
                     if (ringRadius < 1) continue;
 
-                    const ringOpacity = pulse.opacity * (1 - i * 0.3); // anéis internos mais fracos
-                    const lineWidth = 1.5 - (i * 0.4);
+                    // Opacidade diminui para anéis internos com curva suave
+                    const falloff = Math.pow(1 - (i / ringCount), 1.5);
+                    const ringOpacity = pulse.opacity * falloff;
+
+                    // Linha mais grossa no anel principal, mais fina nos internos
+                    const lineWidth = 2.5 - (i * 0.4);
 
                     this.ctx.save();
-                    this.ctx.globalAlpha = ringOpacity * 0.2;
+                    this.ctx.globalAlpha = ringOpacity * 0.25;
                     this.ctx.strokeStyle = '#ffffff';
                     this.ctx.lineWidth = Math.max(0.5, lineWidth);
                     this.ctx.beginPath();
                     this.ctx.arc(this.pulseOriginX, this.pulseOriginY, ringRadius, 0, Math.PI * 2);
+                    this.ctx.stroke();
+                    this.ctx.restore();
+                }
+
+                // Adicionar um brilho sutil na borda principal
+                if (pulse.radius > 5) {
+                    this.ctx.save();
+                    this.ctx.globalAlpha = pulse.opacity * 0.1;
+                    this.ctx.strokeStyle = '#ffffff';
+                    this.ctx.lineWidth = 8;
+                    this.ctx.beginPath();
+                    this.ctx.arc(this.pulseOriginX, this.pulseOriginY, pulse.radius, 0, Math.PI * 2);
                     this.ctx.stroke();
                     this.ctx.restore();
                 }
