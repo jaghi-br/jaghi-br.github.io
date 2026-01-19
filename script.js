@@ -130,8 +130,10 @@ class PluribusEffect {
     }
 
     createPulse() {
+        // Raio inicial = distância do ponto de origem até a borda esquerda da tela
+        const initialRadius = Math.abs(this.pulseOriginX);
         this.pulses.push({
-            radius: 0,
+            radius: initialRadius,
             birthTime: performance.now(),
             opacity: 1
         });
@@ -189,14 +191,15 @@ class PluribusEffect {
     }
 
     updatePulses(currentTime) {
-        const expansionSpeed = 120; // pixels por segundo (mais lento)
+        const expansionSpeed = 120; // pixels por segundo
+        const initialRadius = Math.abs(this.pulseOriginX);
 
         this.pulses = this.pulses.filter(pulse => {
             const age = Math.max(0, currentTime - pulse.birthTime);
-            pulse.radius = Math.max(0, (age / 1000) * expansionSpeed);
+            pulse.radius = Math.max(0, initialRadius + (age / 1000) * expansionSpeed);
 
-            // Fade out gradual
-            const fadeStart = this.maxRadius * 0.2;
+            // Fade out gradual - começa após passar pela área visível
+            const fadeStart = initialRadius + (this.maxRadius - initialRadius) * 0.3;
             if (pulse.radius > fadeStart) {
                 pulse.opacity = Math.max(0, 1 - ((pulse.radius - fadeStart) / (this.maxRadius - fadeStart)));
             }
