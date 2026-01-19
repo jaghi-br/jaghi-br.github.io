@@ -43,7 +43,7 @@ class PluribusEffect {
         this.centerY = this.canvas.height / 2;
 
         // Centro das ondas fora da tela à esquerda
-        this.pulseOriginX = -200;
+        this.pulseOriginX = -2000;
         this.pulseOriginY = this.centerY;
 
         // Raio máximo: distância até o canto mais distante (direita) + margem
