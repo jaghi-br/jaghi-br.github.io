@@ -42,13 +42,13 @@ class PluribusEffect {
         this.centerX = this.canvas.width / 2;
         this.centerY = this.canvas.height / 2;
 
-        // Centro das ondas no centro esquerdo da tela
-        this.pulseOriginX = 0;
+        // Centro das ondas fora da tela à esquerda
+        this.pulseOriginX = -200;
         this.pulseOriginY = this.centerY;
 
-        // Raio máximo: até a borda direita da tela
+        // Raio máximo: distância até o canto mais distante (direita) + margem
         this.maxRadius = Math.sqrt(
-            Math.pow(this.canvas.width, 2) + Math.pow(this.canvas.height / 2, 2)
+            Math.pow(this.canvas.width - this.pulseOriginX, 2) + Math.pow(this.canvas.height / 2, 2)
         ) + 100;
     }
 
@@ -192,8 +192,8 @@ class PluribusEffect {
         const expansionSpeed = 120; // pixels por segundo (mais lento)
 
         this.pulses = this.pulses.filter(pulse => {
-            const age = currentTime - pulse.birthTime;
-            pulse.radius = (age / 1000) * expansionSpeed;
+            const age = Math.max(0, currentTime - pulse.birthTime);
+            pulse.radius = Math.max(0, (age / 1000) * expansionSpeed);
 
             // Fade out gradual
             const fadeStart = this.maxRadius * 0.2;
