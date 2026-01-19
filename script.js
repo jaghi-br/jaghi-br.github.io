@@ -141,7 +141,7 @@ class PluribusEffect {
 
     updateParticle(p, currentTime) {
         // Força de retorno à posição base (efeito mola) - mais forte para partículas do texto
-        const springForce = p.isText ? 0.08 : 0.02;
+        const springForce = p.isText ? 0.08 : 0.03;
         const dx = p.baseX - p.x;
         const dy = p.baseY - p.y;
 
@@ -157,23 +157,23 @@ class PluribusEffect {
 
             const pulseRadius = pulse.radius;
             const distFromWave = Math.abs(distFromPulseOrigin - pulseRadius);
-            const waveWidth = 60;
+            const waveWidth = 120; // Onda mais larga para afetar mais partículas
 
             if (distFromWave < waveWidth) {
                 // Força da onda baseada na distância
                 const waveStrength = (1 - distFromWave / waveWidth) * pulse.opacity;
                 const angle = Math.atan2(p.y - this.pulseOriginY, p.x - this.pulseOriginX);
 
-                // Deslocamento perpendicular e radial (mais sutil para texto)
-                const forceMultiplier = p.isText ? 0.3 : 1;
-                const perpForce = Math.sin(distFromPulseOrigin * 0.1 + this.time * 0.05) * 2 * forceMultiplier;
-                const radialForce = waveStrength * 1.5 * forceMultiplier;
+                // Deslocamento perpendicular e radial (mais forte para partículas de fundo)
+                const forceMultiplier = p.isText ? 0.4 : 2.5;
+                const perpForce = Math.sin(distFromPulseOrigin * 0.05 + this.time * 0.03) * 3 * forceMultiplier;
+                const radialForce = waveStrength * 2.5 * forceMultiplier;
 
                 p.vx += Math.cos(angle) * radialForce + Math.cos(angle + Math.PI / 2) * perpForce * waveStrength;
                 p.vy += Math.sin(angle) * radialForce + Math.sin(angle + Math.PI / 2) * perpForce * waveStrength;
 
                 // Aumentar opacidade quando a onda passa
-                p.opacity = Math.min(1, p.baseOpacity + waveStrength * 0.3);
+                p.opacity = Math.min(1, p.baseOpacity + waveStrength * 0.5);
             }
         });
 
