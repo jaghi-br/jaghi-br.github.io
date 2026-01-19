@@ -18,7 +18,7 @@ class PluribusEffect {
 
         this.time = 0;
         this.lastPulseTime = 0;
-        this.pulseInterval = 500; // pulsos mais frequentes para efeito contínuo
+        this.pulseInterval = 1500; // pulsos mais lentos (1.5 segundos)
         this.pulseRadius = 0;
         this.pulses = [];
 
@@ -189,7 +189,7 @@ class PluribusEffect {
     }
 
     updatePulses(currentTime) {
-        const expansionSpeed = 200; // pixels por segundo
+        const expansionSpeed = 120; // pixels por segundo (mais lento)
 
         this.pulses = this.pulses.filter(pulse => {
             const age = currentTime - pulse.birthTime;
@@ -221,14 +221,26 @@ class PluribusEffect {
         this.pulses.forEach(pulse => {
             // Verificar se o raio é positivo e opacidade é visível
             if (pulse.radius > 0 && pulse.opacity > 0.02) {
-                this.ctx.save();
-                this.ctx.globalAlpha = pulse.opacity * 0.15;
-                this.ctx.strokeStyle = '#ffffff';
-                this.ctx.lineWidth = 1;
-                this.ctx.beginPath();
-                this.ctx.arc(this.pulseOriginX, this.pulseOriginY, pulse.radius, 0, Math.PI * 2);
-                this.ctx.stroke();
-                this.ctx.restore();
+                // Desenhar múltiplos anéis para efeito ripple
+                const ringCount = 3;
+                const ringSpacing = 8; // espaçamento entre anéis
+
+                for (let i = 0; i < ringCount; i++) {
+                    const ringRadius = pulse.radius - (i * ringSpacing);
+                    if (ringRadius <= 0) continue;
+
+                    const ringOpacity = pulse.opacity * (1 - i * 0.3); // anéis internos mais fracos
+                    const lineWidth = 1.5 - (i * 0.4);
+
+                    this.ctx.save();
+                    this.ctx.globalAlpha = ringOpacity * 0.2;
+                    this.ctx.strokeStyle = '#ffffff';
+                    this.ctx.lineWidth = Math.max(0.5, lineWidth);
+                    this.ctx.beginPath();
+                    this.ctx.arc(this.pulseOriginX, this.pulseOriginY, ringRadius, 0, Math.PI * 2);
+                    this.ctx.stroke();
+                    this.ctx.restore();
+                }
             }
         });
     }
